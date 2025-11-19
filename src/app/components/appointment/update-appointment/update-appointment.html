@@ -1,0 +1,224 @@
+<div class="container mx-auto p-4 max-w-4xl">
+  <!-- Loading Spinner -->
+  <div *ngIf="loadingData" class="flex justify-center items-center h-64">
+    <p-progressSpinner 
+      styleClass="w-16 h-16" 
+      strokeWidth="4"
+      animationDuration="1s">
+    </p-progressSpinner>
+  </div>
+
+  <!-- Formulario -->
+  <p-card *ngIf="!loadingData">
+    <ng-template pTemplate="header">
+      <div class="p-4 border-b">
+        <div class="flex items-center gap-3">
+          <button 
+            pButton 
+            icon="pi pi-arrow-left" 
+            class="p-button-text p-button-rounded"
+            (click)="onCancel()"
+            [disabled]="loading">
+          </button>
+          <div>
+            <h2 class="text-2xl font-bold text-gray-800">Actualizar Cita</h2>
+            <p class="text-gray-600 mt-1">Modifique la información de la cita médica</p>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+
+    <form [formGroup]="appointmentForm" (ngSubmit)="onSubmit()" class="p-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        
+        <!-- Paciente -->
+        <div class="flex flex-col gap-2">
+          <label for="patient_name" class="font-semibold text-gray-700">
+            Paciente <span class="text-red-500">*</span>
+          </label>
+          <div class="relative">
+            <input 
+              pInputText 
+              id="patient_name" 
+              formControlName="patient_name"
+              placeholder="Buscar paciente..."
+              class="w-full"
+              (input)="filterPatients($event)"
+              [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('patient_id')}"
+            />
+            <!-- Menú desplegable de pacientes -->
+            <div 
+              *ngIf="filteredPatients.length > 0" 
+              class="absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg mt-1 max-h-48 overflow-y-auto"
+            >
+              <div 
+                *ngFor="let patient of filteredPatients"
+                class="p-3 hover:bg-blue-50 cursor-pointer border-b last:border-b-0"
+                (click)="selectPatient(patient)"
+              >
+                <div class="font-semibold text-gray-800">
+                  {{ patient.first_name }} {{ patient.last_name }}
+                </div>
+                <div class="text-sm text-gray-600">
+                  Doc: {{ patient.document }}
+                </div>
+              </div>
+            </div>
+          </div>
+          <small class="text-red-500" *ngIf="isFieldInvalid('patient_id')">
+            {{ getErrorMessage('patient_id') }}
+          </small>
+        </div>
+
+        <!-- Doctor -->
+        <div class="flex flex-col gap-2">
+          <label for="doctor_name" class="font-semibold text-gray-700">
+            Doctor <span class="text-red-500">*</span>
+          </label>
+          <div class="relative">
+            <input 
+              pInputText 
+              id="doctor_name" 
+              formControlName="doctor_name"
+              placeholder="Buscar doctor..."
+              class="w-full"
+              (input)="filterDoctors($event)"
+              [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('doctor_id')}"
+            />
+            <!-- Menú desplegable de doctores -->
+            <div 
+              *ngIf="filteredDoctors.length > 0" 
+              class="absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg mt-1 max-h-48 overflow-y-auto"
+            >
+              <div 
+                *ngFor="let doctor of filteredDoctors"
+                class="p-3 hover:bg-blue-50 cursor-pointer border-b last:border-b-0"
+                (click)="selectDoctor(doctor)"
+              >
+                <div class="font-semibold text-gray-800">
+                  Dr. {{ doctor.first_name }} {{ doctor.last_name }}
+                </div>
+                <div class="text-sm text-gray-600">
+                  {{ doctor.specialty_name || 'Especialidad no especificada' }}
+                </div>
+              </div>
+            </div>
+          </div>
+          <small class="text-red-500" *ngIf="isFieldInvalid('doctor_id')">
+            {{ getErrorMessage('doctor_id') }}
+          </small>
+        </div>
+
+        <!-- Fecha y Hora -->
+        <div class="flex flex-col gap-2">
+          <label for="appointment_datetime" class="font-semibold text-gray-700">
+            Fecha y Hora de la Cita <span class="text-red-500">*</span>
+          </label>
+          <input 
+            pInputText 
+            type="datetime-local"
+            id="appointment_datetime" 
+            formControlName="appointment_datetime"
+            class="w-full"
+            [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('appointment_datetime')}"
+          />
+          <small class="text-red-500" *ngIf="isFieldInvalid('appointment_datetime')">
+            {{ getErrorMessage('appointment_datetime') }}
+          </small>
+        </div>
+
+        <!-- Estado -->
+        <div class="flex flex-col gap-2">
+          <label for="status" class="font-semibold text-gray-700">
+            Estado <span class="text-red-500">*</span>
+          </label>
+          <p-select 
+            formControlName="status"
+            [options]="statusOptions"
+            placeholder="Seleccione el estado"
+            optionLabel="label"
+            optionValue="value"
+            class="w-full"
+            [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('status')}"
+          ></p-select>
+          <small class="text-red-500" *ngIf="isFieldInvalid('status')">
+            {{ getErrorMessage('status') }}
+          </small>
+        </div>
+
+        <!-- Motivo de Consulta (columna completa) -->
+        <div class="flex flex-col gap-2 md:col-span-2">
+          <label for="consultation_reason" class="font-semibold text-gray-700">
+            Motivo de Consulta
+          </label>
+          <textarea 
+            id="consultation_reason" 
+            formControlName="consultation_reason"
+            placeholder="Describa brevemente el motivo de la consulta (máx. 200 caracteres)"
+            class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            rows="3"
+            [ngClass]="{'border-red-500': isFieldInvalid('consultation_reason')}"
+          ></textarea>
+          <small class="text-gray-500" *ngIf="!isFieldInvalid('consultation_reason')">
+            {{ appointmentForm.get('consultation_reason')?.value?.length || 0 }}/200 caracteres
+          </small>
+          <small class="text-red-500" *ngIf="isFieldInvalid('consultation_reason')">
+            {{ getErrorMessage('consultation_reason') }}
+          </small>
+        </div>
+
+        <!-- Observaciones (columna completa) -->
+        <div class="flex flex-col gap-2 md:col-span-2">
+          <label for="observations" class="font-semibold text-gray-700">
+            Observaciones Adicionales
+          </label>
+          <textarea 
+            id="observations" 
+            formControlName="observations"
+            placeholder="Información adicional o notas importantes"
+            class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            rows="3"
+          ></textarea>
+          <small class="text-gray-500">
+            Campo opcional para agregar información relevante
+          </small>
+        </div>
+      </div>
+
+      <!-- Información adicional -->
+      <div class="bg-amber-50 border-l-4 border-amber-400 p-4 rounded mt-5">
+        <div class="flex">
+          <div class="flex-shrink-0">
+            <i class="pi pi-exclamation-triangle text-amber-400 text-xl"></i>
+          </div>
+          <div class="ml-3">
+            <p class="text-sm text-amber-700">
+              <strong>Importante:</strong> Verifique que la fecha y hora sean correctas. Si cambia el estado a "Cancelada" o "Completada", asegúrese de que sea la acción correcta.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Botones de acción -->
+      <div class="flex gap-3 justify-end mt-6 pt-4 border-t">
+        <p-button 
+          label="Cancelar" 
+          severity="secondary" 
+          (onClick)="onCancel()"
+          [outlined]="true"
+          icon="pi pi-times"
+          [disabled]="loading"
+        ></p-button>
+        <p-button 
+          label="Actualizar Cita" 
+          type="submit"
+          icon="pi pi-save"
+          [loading]="loading"
+          [disabled]="loading || appointmentForm.invalid || !appointmentForm.dirty"
+        ></p-button>
+      </div>
+    </form>
+  </p-card>
+</div>
+
+<p-toast position="top-right"></p-toast>

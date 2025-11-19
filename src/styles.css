@@ -1,1 +1,29 @@
 /* You can add global styles to this file, and also import other style files */
+@import "tailwindcss";
+@import "primeicons/primeicons.css";
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+.panel-green .p-panelmenu .p-panelmenu-header {
+  background-color: #e8f5e9 !important; /* verde suave */
+  color: #1b5e20 !important;            /* verde oscuro */
+  border-color: #a5d6a7 !important;
+}
+
+.panel-green .p-panelmenu .p-panelmenu-content {
+  background-color: #f1f8f4 !important; /* verde aún más suave */
+  border-color: #a5d6a7 !important;
+}
+
+.panel-green .p-panelmenu .p-menuitem-link {
+  color: #1b5e20 !important;            /* texto verde oscuro */
+}
+
+.panel-green .p-panelmenu .p-menuitem-link:hover {
+  background-color: #dcedc8 !important; /* hover verde claro */
+}
+
+.panel-green .p-menuitem-icon {
+  color: #1b5e20 !important;
+}

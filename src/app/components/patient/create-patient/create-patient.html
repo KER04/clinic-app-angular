@@ -1,0 +1,179 @@
+<div class="container mx-auto p-4 max-w-4xl">
+  
+
+  <p-card>
+    <ng-template pTemplate="header">
+      <div class="p-4">
+        <h2 class="text-2xl font-bold text-gray-800">Registro de Nuevo Paciente</h2>
+        <p class="text-gray-600 mt-2">Complete los datos del paciente</p>
+      </div>
+    </ng-template>
+
+    <form [formGroup]="patientForm" (ngSubmit)="onSubmit()">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+        <!-- Nombre -->
+        <div class="flex flex-col gap-2">
+          <label for="first_name" class="font-semibold">
+            Nombre <span class="text-red-500">*</span>
+          </label>
+          <input 
+            pInputText 
+            id="first_name" 
+            formControlName="first_name"
+            placeholder="Ingrese el nombre"
+            [class.ng-invalid]="isFieldInvalid('first_name')"
+          />
+          <small class="text-red-500" *ngIf="isFieldInvalid('first_name')">
+            El nombre es requerido (mínimo 2 caracteres)
+          </small>
+        </div>
+
+        <!-- Apellido -->
+        <div class="flex flex-col gap-2">
+          <label for="last_name" class="font-semibold">
+            Apellido <span class="text-red-500">*</span>
+          </label>
+          <input 
+            pInputText 
+            id="last_name" 
+            formControlName="last_name"
+            placeholder="Ingrese el apellido"
+            [class.ng-invalid]="isFieldInvalid('last_name')"
+          />
+          <small class="text-red-500" *ngIf="isFieldInvalid('last_name')">
+            El apellido es requerido (mínimo 2 caracteres)
+          </small>
+        </div>
+
+        <!-- Documento -->
+        <div class="flex flex-col gap-2">
+          <label for="document" class="font-semibold">
+            Documento <span class="text-red-500">*</span>
+          </label>
+          <input 
+            pInputText 
+            id="document" 
+            formControlName="document"
+            placeholder="Ingrese el documento"
+            [class.ng-invalid]="isFieldInvalid('document')"
+          />
+          <small class="text-red-500" *ngIf="isFieldInvalid('document')">
+            El documento es requerido (mínimo 5 caracteres)
+          </small>
+        </div>
+
+        <!-- Fecha de Nacimiento -->
+        <div class="flex flex-col gap-2">
+          <label for="birth_date" class="font-semibold">
+            Fecha de Nacimiento <span class="text-red-500">*</span>
+          </label>
+          <p-datepicker 
+            formControlName="birth_date"
+            [showIcon]="true"
+            dateFormat="dd/mm/yy"
+            placeholder="Seleccione la fecha"
+            [class.ng-invalid]="isFieldInvalid('birth_date')"
+          ></p-datepicker>
+          <small class="text-red-500" *ngIf="isFieldInvalid('birth_date')">
+            La fecha de nacimiento es requerida
+          </small>
+        </div>
+
+        <!-- Teléfono -->
+        <div class="flex flex-col gap-2">
+          <label for="phone" class="font-semibold">Teléfono</label>
+          <input 
+            pInputText 
+            id="phone" 
+            formControlName="phone"
+            placeholder="Ingrese el teléfono"
+          />
+        </div>
+
+        <!-- Email -->
+        <div class="flex flex-col gap-2">
+          <label for="email" class="font-semibold">Correo Electrónico</label>
+          <input 
+            pInputText 
+            id="email" 
+            formControlName="email"
+            type="email"
+            placeholder="ejemplo@correo.com"
+            [class.ng-invalid]="isFieldInvalid('email')"
+          />
+          <small class="text-red-500" *ngIf="isFieldInvalid('email')">
+            Ingrese un correo válido
+          </small>
+        </div>
+
+        <!-- Género -->
+        <div class="flex flex-col gap-2">
+          <label for="gender" class="font-semibold">
+            Género <span class="text-red-500">*</span>
+          </label>
+          <p-select 
+            formControlName="gender"
+            [options]="genderOptions"
+            placeholder="Seleccione el género"
+            optionLabel="label"
+            optionValue="value"
+            [class.ng-invalid]="isFieldInvalid('gender')"
+          ></p-select>
+          <small class="text-red-500" *ngIf="isFieldInvalid('gender')">
+            El género es requerido
+          </small>
+        </div>
+
+        <!-- Estado -->
+        <div class="flex flex-col gap-2">
+          <label for="status" class="font-semibold">
+            Estado <span class="text-red-500">*</span>
+          </label>
+          <p-select 
+            formControlName="status"
+            [options]="statusOptions"
+            placeholder="Seleccione el estado"
+            optionLabel="label"
+            optionValue="value"
+            [class.ng-invalid]="isFieldInvalid('status')"
+          ></p-select>
+          <small class="text-red-500" *ngIf="isFieldInvalid('status')">
+            El estado es requerido
+          </small>
+        </div>
+
+        <!-- Dirección -->
+        <div class="flex flex-col gap-2 md:col-span-2">
+          <label for="address" class="font-semibold">Dirección</label>
+          <input 
+            pInputText 
+            id="address" 
+            formControlName="address"
+            placeholder="Ingrese la dirección completa"
+          />
+        </div>
+      </div>
+
+      <!-- Botones -->
+      <div class="flex gap-3 justify-end mt-6">
+        <p-button 
+          label="Cancelar" 
+          severity="secondary" 
+          (onClick)="onCancel()"
+          [outlined]="true"
+        ></p-button>
+
+        <p-button 
+          label="Guardar Paciente" 
+          type="submit"
+          icon="pi pi-check"
+          [loading]="loading"
+          [disabled]="loading"
+        ></p-button>
+      </div>
+    </form>
+  </p-card>
+</div>
+
+<p-toast></p-toast>

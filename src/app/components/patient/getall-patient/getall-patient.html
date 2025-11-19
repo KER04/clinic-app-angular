@@ -1,0 +1,125 @@
+<div class="card p-8">
+    <div class="flex justify-between items-center mb-4">
+        <h2 class="text-2xl font-bold">Gestión de Pacientes</h2>
+        <button 
+            pButton 
+            label="Nuevo Paciente" 
+            icon="pi pi-plus" 
+            class="p-button-success"
+            routerLink="/Patient/Create"
+        ></button>
+    </div>
+
+    <p-table 
+        [value]="patients" 
+        [loading]="loading"
+        stripedRows 
+        [tableStyle]="{'min-width': '70rem'}"
+        [paginator]="true"
+        [rows]="10"
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+        [rowsPerPageOptions]="[10, 25, 50]"
+    >
+        <ng-template pTemplate="header">
+            <tr>
+                <th class="text-left">ID</th>
+                <th class="text-left">Nombre Completo</th>
+                <th class="text-left">Documento</th>
+                <th class="text-left">Fecha Nacimiento</th>
+                <th class="text-left">Teléfono</th>
+                <th class="text-left">Correo</th>
+                <th class="text-left">Dirección</th>
+                <th class="text-left">Género</th>
+                <th class="text-center">Estado</th>
+                <th class="text-center">Acciones</th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-patient>
+            <tr>
+                <td>{{patient.id}}</td>
+                <td class="font-semibold">
+                    <div class="flex items-center gap-2">
+                        <i class="pi pi-user text-blue-500"></i>
+                        {{patient.first_name}} {{patient.last_name}}
+                    </div>
+                </td>
+                <td>{{patient.document}}</td>
+                <td>{{patient.birth_date | date:'dd/MM/yyyy'}}</td>
+                <td>
+                    <span *ngIf="patient.phone; else noPhone">
+                        <i class="pi pi-phone text-gray-400 mr-1"></i>
+                        {{patient.phone}}
+                    </span>
+                    <ng-template #noPhone>
+                        <span class="text-gray-400 italic">N/A</span>
+                    </ng-template>
+                </td>
+                <td>
+                    <span *ngIf="patient.email; else noEmail">
+                        <i class="pi pi-envelope text-gray-400 mr-1"></i>
+                        {{patient.email}}
+                    </span>
+                    <ng-template #noEmail>
+                        <span class="text-gray-400 italic">N/A</span>
+                    </ng-template>
+                </td>
+                <td>
+                    <span *ngIf="patient.address; else noAddress">
+                        {{patient.address}}
+                    </span>
+                    <ng-template #noAddress>
+                        <span class="text-gray-400 italic">N/A</span>
+                    </ng-template>
+                </td>
+                <td>
+                    <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs font-semibold">
+                        {{patient.gender === 'MALE' ? 'Masculino' : patient.gender === 'FEMALE' ? 'Femenino' : 'Otro'}}
+                    </span>
+                </td>
+                <td class="text-center">
+                    <span 
+                        class="px-3 py-1 rounded-full text-xs font-semibold"
+                        [ngClass]="patient.status === 'ACTIVE' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'"
+                    >
+                        {{patient.status === 'ACTIVE' ? 'Activo' : 'Inactivo'}}
+                    </span>
+                </td>
+                <td class="text-center">
+                    <!-- Botón Editar -->
+                    <button 
+                        pButton 
+                        icon="pi pi-pencil" 
+                        class="p-button-rounded p-button-warning p-button-text mr-2"
+                        [routerLink]="['/Patient/Update', patient.id]"
+                        pTooltip="Editar"
+                        tooltipPosition="top"
+                    ></button>
+                    <!-- Botón Desactivar/Activar -->
+                    <button 
+                        pButton 
+                        [icon]="patient.status === 'ACTIVE' ? 'pi pi-ban' : 'pi pi-check-circle'"
+                        [class]="patient.status === 'ACTIVE' ? 'p-button-rounded p-button-danger p-button-text' : 'p-button-rounded p-button-success p-button-text'"
+                        [pTooltip]="patient.status === 'ACTIVE' ? 'Desactivar' : 'Activar'"
+                        tooltipPosition="top"
+                        (click)="toggleStatus(patient)"
+                    ></button>
+                </td>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="10" class="text-center py-8">
+                    <i class="pi pi-users text-4xl text-gray-400 mb-3"></i>
+                    <p class="text-gray-500 font-semibold text-lg">No hay pacientes registrados</p>
+                    <p class="text-gray-400 text-sm mt-2">Comience agregando un nuevo paciente</p>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+
+<p-confirmdialog></p-confirmdialog>
+<p-toast position="top-right"></p-toast>

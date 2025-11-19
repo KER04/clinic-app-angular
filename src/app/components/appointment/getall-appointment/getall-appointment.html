@@ -1,0 +1,110 @@
+<div class="card p-8">
+    <div class="flex justify-between items-center mb-4">
+        <h2 class="text-2xl font-bold">Gestión de Citas</h2>
+        <button 
+            pButton 
+            label="Nueva Cita" 
+            icon="pi pi-plus" 
+            class="p-button-success"
+            routerLink="/Appointment/Create"
+        ></button>
+    </div>
+
+    <p-table 
+        [value]="appointments" 
+        [loading]="loading"
+        stripedRows 
+        [tableStyle]="{'min-width': '80rem'}"
+        [paginator]="true"
+        [rows]="10"
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+        [rowsPerPageOptions]="[10, 25, 50]"
+    >
+        <ng-template pTemplate="header">
+            <tr>
+                <th class="text-left">ID</th>
+                <th class="text-left">Paciente</th>
+                <th class="text-left">Doctor</th>
+                <th class="text-left">Fecha y Hora</th>
+                <th class="text-left">Motivo</th>
+                <th class="text-center">Estado</th>
+                <th class="text-center">Acciones</th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-app>
+            <tr>
+                <td>{{ app.id }}</td>
+
+                <td>
+                    <i class="pi pi-user text-blue-500 mr-2"></i>
+                    <span class="font-semibold">ID: {{ app.patient_id }}</span>
+                </td>
+
+                <td>
+                    <i class="pi pi-user-md text-green-600 mr-2"></i>
+                    <span class="font-semibold">ID: {{ app.doctor_id }}</span>
+                </td>
+
+                <td>
+                    <i class="pi pi-calendar mr-2 text-gray-500"></i>
+                    {{ app.appointment_datetime | date:'dd/MM/yyyy, HH:mm' }}
+                </td>
+
+                <td>
+                    <span *ngIf="app.consultation_reason; else noReason">
+                        {{ app.consultation_reason }}
+                    </span>
+                    <ng-template #noReason>
+                        <span class="text-gray-400 italic">Sin motivo</span>
+                    </ng-template>
+                </td>
+
+                <td class="text-center">
+                    <span 
+                        class="px-3 py-1 rounded-full text-xs font-semibold"
+                        [ngClass]="app.status === 'ACTIVE' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'"
+                    >
+                        {{ app.status === 'ACTIVE' ? 'Activa' : 'Inactiva' }}
+                    </span>
+                </td>
+
+                <td class="text-center">
+                    <!-- Editar -->
+                    <button 
+                        pButton 
+                        icon="pi pi-pencil" 
+                        class="p-button-rounded p-button-warning p-button-text mr-2"
+                        [routerLink]="['/Appointment/Update', app.id]"
+                        pTooltip="Editar"
+                        tooltipPosition="top"
+                    ></button>
+
+                    <!-- Cambiar estado -->
+                    <button 
+                        pButton 
+                        [icon]="app.status === 'ACTIVE' ? 'pi pi-ban' : 'pi pi-check-circle'"
+                        [class]="app.status === 'ACTIVE' ? 'p-button-rounded p-button-danger p-button-text' : 'p-button-rounded p-button-success p-button-text'"
+                        [pTooltip]="app.status === 'ACTIVE' ? 'Desactivar' : 'Activar'"
+                        tooltipPosition="top"
+                        (click)="toggleStatus(app)"
+                    ></button>
+                </td>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="7" class="text-center py-8">
+                    <i class="pi pi-calendar text-4xl text-gray-400 mb-3"></i>
+                    <p class="text-gray-500 font-semibold text-lg">No hay citas registradas</p>
+                    <p class="text-gray-400 text-sm mt-2">Comience agregando una nueva cita</p>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+
+<p-confirmdialog></p-confirmdialog>
+<p-toast position="top-right"></p-toast>
