@@ -1,4 +1,4 @@
-# AppKer — Sistema de Gestión Clínica
+# Frontend — Sistema de Gestión Clínica
 
 Frontend SPA para administración de clínicas médicas. Gestiona pacientes, doctores, citas, diagnósticos, prescripciones, medicamentos, procedimientos y pagos desde una interfaz unificada con autenticación JWT.
 
