@@ -1,0 +1,76 @@
+<div class="container mx-auto p-4 max-w-4xl">
+  <div *ngIf="loadingData" class="flex justify-center items-center h-64">
+    <p-progressSpinner styleClass="w-16 h-16" strokeWidth="4"></p-progressSpinner>
+  </div>
+
+  <p-card *ngIf="!loadingData">
+    <ng-template pTemplate="header">
+      <div class="p-4 border-b">
+        <div class="flex items-center gap-3">
+          <button pButton icon="pi pi-arrow-left" class="p-button-text p-button-rounded" (click)="onCancel()" [disabled]="loading"></button>
+          <div>
+            <h2 class="text-2xl font-bold text-gray-800">Actualizar Detalle de Prescripción</h2>
+            <p class="text-gray-600 mt-1">Modifique la información del detalle</p>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="p-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+        <div class="flex flex-col gap-2">
+          <label class="font-semibold text-gray-700">ID Prescripción <span class="text-red-500">*</span></label>
+          <input pInputText formControlName="prescription_id" type="number" class="w-full"
+            [ngClass]="{'ng-invalid ng-dirty': isInvalid('prescription_id')}" />
+          <small class="text-red-500" *ngIf="isInvalid('prescription_id')">Campo requerido</small>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <label class="font-semibold text-gray-700">ID Medicamento <span class="text-red-500">*</span></label>
+          <input pInputText formControlName="medicine_id" type="number" class="w-full"
+            [ngClass]="{'ng-invalid ng-dirty': isInvalid('medicine_id')}" />
+          <small class="text-red-500" *ngIf="isInvalid('medicine_id')">Campo requerido</small>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <label class="font-semibold text-gray-700">Cantidad <span class="text-red-500">*</span></label>
+          <input pInputText formControlName="quantity" type="number" class="w-full"
+            [ngClass]="{'ng-invalid ng-dirty': isInvalid('quantity')}" />
+          <small class="text-red-500" *ngIf="isInvalid('quantity')">Campo requerido</small>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <label class="font-semibold text-gray-700">Días de Tratamiento <span class="text-red-500">*</span></label>
+          <input pInputText formControlName="treatment_days" type="number" class="w-full"
+            [ngClass]="{'ng-invalid ng-dirty': isInvalid('treatment_days')}" />
+          <small class="text-red-500" *ngIf="isInvalid('treatment_days')">Campo requerido</small>
+        </div>
+
+        <div class="flex flex-col gap-2 md:col-span-2">
+          <label class="font-semibold text-gray-700">Dosis <span class="text-red-500">*</span></label>
+          <input pInputText formControlName="dosage" class="w-full"
+            [ngClass]="{'ng-invalid ng-dirty': isInvalid('dosage')}" />
+          <small class="text-red-500" *ngIf="isInvalid('dosage')">Campo requerido</small>
+        </div>
+
+        <div class="flex flex-col gap-2 md:col-span-2">
+          <label class="font-semibold text-gray-700">Instrucciones Especiales</label>
+          <textarea formControlName="special_instructions" rows="2" class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <label class="font-semibold text-gray-700">Estado <span class="text-red-500">*</span></label>
+          <p-select formControlName="status" [options]="statusOptions" optionLabel="label" optionValue="value" class="w-full"></p-select>
+        </div>
+
+      </div>
+
+      <div class="flex gap-3 justify-end mt-6 pt-4 border-t">
+        <p-button label="Cancelar" severity="secondary" [outlined]="true" icon="pi pi-times" (onClick)="onCancel()" [disabled]="loading"></p-button>
+        <p-button label="Actualizar Detalle" type="submit" icon="pi pi-save" [loading]="loading" [disabled]="loading || form.invalid || !form.dirty"></p-button>
+      </div>
+    </form>
+  </p-card>
+</div>
+<p-toast position="top-right"></p-toast>

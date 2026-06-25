@@ -1,0 +1,58 @@
+<div class="card p-8">
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-2xl font-bold">Gestión de Prescripciones</h2>
+    <button pButton label="Nueva Prescripción" icon="pi pi-plus" class="p-button-success" routerLink="/Prescription/Create"></button>
+  </div>
+
+  <p-table [value]="prescriptions" [loading]="loading" stripedRows [tableStyle]="{'min-width': '70rem'}"
+    [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+    [rowsPerPageOptions]="[10, 25, 50]">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>ID</th>
+        <th>Cita ID</th>
+        <th>Doctor ID</th>
+        <th>Fecha Emisión</th>
+        <th>Instrucciones</th>
+        <th class="text-center">Estado</th>
+        <th class="text-center">Acciones</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-item>
+      <tr>
+        <td>{{ item.id }}</td>
+        <td>{{ item.appointment_id }}</td>
+        <td>{{ item.doctor_id }}</td>
+        <td>{{ item.issue_date | date:'dd/MM/yyyy' }}</td>
+        <td>{{ item.general_instructions || '-' }}</td>
+        <td class="text-center">
+          <span class="px-3 py-1 rounded-full text-xs font-semibold"
+            [ngClass]="item.status === 'ACTIVE' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'">
+            {{ item.status === 'ACTIVE' ? 'Activa' : 'Inactiva' }}
+          </span>
+        </td>
+        <td class="text-center">
+          <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-warning p-button-text mr-2"
+            [routerLink]="['/Prescription/Update', item.id]" pTooltip="Editar" tooltipPosition="top"></button>
+          <button pButton [icon]="item.status === 'ACTIVE' ? 'pi pi-ban' : 'pi pi-check-circle'"
+            [class]="item.status === 'ACTIVE' ? 'p-button-rounded p-button-danger p-button-text' : 'p-button-rounded p-button-success p-button-text'"
+            [pTooltip]="item.status === 'ACTIVE' ? 'Desactivar' : 'Activar'" tooltipPosition="top"
+            (click)="toggleStatus(item)"></button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="7" class="text-center py-8">
+          <i class="pi pi-file-edit text-4xl text-gray-400 mb-3"></i>
+          <p class="text-gray-500 font-semibold text-lg">No hay prescripciones registradas</p>
+          <p class="text-gray-400 text-sm mt-2">Comience agregando una nueva prescripción</p>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<p-confirmdialog></p-confirmdialog>
+<p-toast position="top-right"></p-toast>

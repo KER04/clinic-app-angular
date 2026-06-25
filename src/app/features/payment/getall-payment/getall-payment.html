@@ -1,0 +1,66 @@
+<div class="card p-8">
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-2xl font-bold">Gestión de Pagos</h2>
+    <button pButton label="Nuevo Pago" icon="pi pi-plus" class="p-button-success" routerLink="/Payment/Create"></button>
+  </div>
+
+  <p-table [value]="payments" [loading]="loading" stripedRows [tableStyle]="{'min-width': '90rem'}"
+    [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+    [rowsPerPageOptions]="[10, 25, 50]">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>ID</th>
+        <th>Cita ID</th>
+        <th>N° Factura</th>
+        <th>Total</th>
+        <th>Método Pago</th>
+        <th>Fecha Pago</th>
+        <th class="text-center">Estado Pago</th>
+        <th class="text-center">Estado</th>
+        <th class="text-center">Acciones</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-item>
+      <tr>
+        <td>{{ item.id }}</td>
+        <td>{{ item.appointment_id }}</td>
+        <td>{{ item.invoice_number || '-' }}</td>
+        <td class="font-semibold">$ {{ item.total_amount }}</td>
+        <td>{{ item.payment_method }}</td>
+        <td>{{ item.payment_date | date:'dd/MM/yyyy' }}</td>
+        <td class="text-center">
+          <span class="px-3 py-1 rounded-full text-xs font-semibold" [ngClass]="getPaymentStatusClass(item.payment_status)">
+            {{ item.payment_status }}
+          </span>
+        </td>
+        <td class="text-center">
+          <span class="px-3 py-1 rounded-full text-xs font-semibold"
+            [ngClass]="item.status === 'ACTIVE' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'">
+            {{ item.status === 'ACTIVE' ? 'Activo' : 'Inactivo' }}
+          </span>
+        </td>
+        <td class="text-center">
+          <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-warning p-button-text mr-2"
+            [routerLink]="['/Payment/Update', item.id]" pTooltip="Editar" tooltipPosition="top"></button>
+          <button pButton [icon]="item.status === 'ACTIVE' ? 'pi pi-ban' : 'pi pi-check-circle'"
+            [class]="item.status === 'ACTIVE' ? 'p-button-rounded p-button-danger p-button-text' : 'p-button-rounded p-button-success p-button-text'"
+            [pTooltip]="item.status === 'ACTIVE' ? 'Desactivar' : 'Activar'" tooltipPosition="top"
+            (click)="toggleStatus(item)"></button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="9" class="text-center py-8">
+          <i class="pi pi-wallet text-4xl text-gray-400 mb-3"></i>
+          <p class="text-gray-500 font-semibold text-lg">No hay pagos registrados</p>
+          <p class="text-gray-400 text-sm mt-2">Comience agregando un nuevo pago</p>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<p-confirmdialog></p-confirmdialog>
+<p-toast position="top-right"></p-toast>

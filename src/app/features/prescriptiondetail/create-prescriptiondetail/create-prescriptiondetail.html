@@ -1,0 +1,63 @@
+<div class="container mx-auto p-4 max-w-4xl">
+  <p-card>
+    <ng-template pTemplate="header">
+      <div class="p-4">
+        <h2 class="text-2xl font-bold text-gray-800">Nuevo Detalle de Prescripción</h2>
+        <p class="text-gray-600 mt-1">Complete los datos del detalle</p>
+      </div>
+    </ng-template>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+        <div class="flex flex-col gap-2">
+          <label class="font-semibold">ID Prescripción <span class="text-red-500">*</span></label>
+          <input pInputText formControlName="prescription_id" type="number" placeholder="ID de la prescripción"
+            [class.ng-invalid]="isInvalid('prescription_id')" />
+          <small class="text-red-500" *ngIf="isInvalid('prescription_id')">Campo requerido</small>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <label class="font-semibold">ID Medicamento <span class="text-red-500">*</span></label>
+          <input pInputText formControlName="medicine_id" type="number" placeholder="ID del medicamento"
+            [class.ng-invalid]="isInvalid('medicine_id')" />
+          <small class="text-red-500" *ngIf="isInvalid('medicine_id')">Campo requerido</small>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <label class="font-semibold">Cantidad <span class="text-red-500">*</span></label>
+          <input pInputText formControlName="quantity" type="number" placeholder="Cantidad"
+            [class.ng-invalid]="isInvalid('quantity')" />
+          <small class="text-red-500" *ngIf="isInvalid('quantity')">Campo requerido</small>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <label class="font-semibold">Días de Tratamiento <span class="text-red-500">*</span></label>
+          <input pInputText formControlName="treatment_days" type="number" placeholder="Número de días"
+            [class.ng-invalid]="isInvalid('treatment_days')" />
+          <small class="text-red-500" *ngIf="isInvalid('treatment_days')">Campo requerido</small>
+        </div>
+
+        <div class="flex flex-col gap-2 md:col-span-2">
+          <label class="font-semibold">Dosis <span class="text-red-500">*</span></label>
+          <input pInputText formControlName="dosage" placeholder="Ej: 2 tabletas cada 8 horas"
+            [class.ng-invalid]="isInvalid('dosage')" />
+          <small class="text-red-500" *ngIf="isInvalid('dosage')">Campo requerido</small>
+        </div>
+
+        <div class="flex flex-col gap-2 md:col-span-2">
+          <label class="font-semibold">Instrucciones Especiales</label>
+          <textarea formControlName="special_instructions" rows="2" placeholder="Instrucciones especiales"
+            class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+        </div>
+
+      </div>
+
+      <div class="flex gap-3 justify-end mt-6">
+        <p-button label="Cancelar" severity="secondary" [outlined]="true" (onClick)="onCancel()"></p-button>
+        <p-button label="Guardar Detalle" type="submit" icon="pi pi-check" [loading]="loading" [disabled]="loading"></p-button>
+      </div>
+    </form>
+  </p-card>
+</div>
+<p-toast></p-toast>

@@ -1,0 +1,78 @@
+<div class="container mx-auto p-4 max-w-4xl">
+  <div *ngIf="loadingData" class="flex justify-center items-center h-64">
+    <p-progressSpinner styleClass="w-16 h-16" strokeWidth="4"></p-progressSpinner>
+  </div>
+
+  <p-card *ngIf="!loadingData">
+    <ng-template pTemplate="header">
+      <div class="p-4 border-b">
+        <div class="flex items-center gap-3">
+          <button pButton icon="pi pi-arrow-left" class="p-button-text p-button-rounded" (click)="onCancel()" [disabled]="loading"></button>
+          <div>
+            <h2 class="text-2xl font-bold text-gray-800">Actualizar Medicamento</h2>
+            <p class="text-gray-600 mt-1">Modifique la información del medicamento</p>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="p-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+        <div class="flex flex-col gap-2">
+          <label class="font-semibold text-gray-700">Nombre Comercial <span class="text-red-500">*</span></label>
+          <input pInputText formControlName="commercial_name" class="w-full"
+            [ngClass]="{'ng-invalid ng-dirty': isInvalid('commercial_name')}" />
+          <small class="text-red-500" *ngIf="isInvalid('commercial_name')">Campo requerido</small>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <label class="font-semibold text-gray-700">Nombre Genérico <span class="text-red-500">*</span></label>
+          <input pInputText formControlName="generic_name" class="w-full"
+            [ngClass]="{'ng-invalid ng-dirty': isInvalid('generic_name')}" />
+          <small class="text-red-500" *ngIf="isInvalid('generic_name')">Campo requerido</small>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <label class="font-semibold text-gray-700">Concentración <span class="text-red-500">*</span></label>
+          <input pInputText formControlName="concentration" class="w-full"
+            [ngClass]="{'ng-invalid ng-dirty': isInvalid('concentration')}" />
+          <small class="text-red-500" *ngIf="isInvalid('concentration')">Campo requerido</small>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <label class="font-semibold text-gray-700">Forma Farmacéutica <span class="text-red-500">*</span></label>
+          <input pInputText formControlName="pharmaceutical_form" class="w-full"
+            [ngClass]="{'ng-invalid ng-dirty': isInvalid('pharmaceutical_form')}" />
+          <small class="text-red-500" *ngIf="isInvalid('pharmaceutical_form')">Campo requerido</small>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <label class="font-semibold text-gray-700">Laboratorio <span class="text-red-500">*</span></label>
+          <input pInputText formControlName="laboratory" class="w-full"
+            [ngClass]="{'ng-invalid ng-dirty': isInvalid('laboratory')}" />
+          <small class="text-red-500" *ngIf="isInvalid('laboratory')">Campo requerido</small>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <label class="font-semibold text-gray-700">Precio Unitario <span class="text-red-500">*</span></label>
+          <input pInputText formControlName="unit_price" class="w-full"
+            [ngClass]="{'ng-invalid ng-dirty': isInvalid('unit_price')}" />
+          <small class="text-red-500" *ngIf="isInvalid('unit_price')">Campo requerido</small>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <label class="font-semibold text-gray-700">Estado <span class="text-red-500">*</span></label>
+          <p-select formControlName="status" [options]="statusOptions" optionLabel="label" optionValue="value" class="w-full"></p-select>
+        </div>
+
+      </div>
+
+      <div class="flex gap-3 justify-end mt-6 pt-4 border-t">
+        <p-button label="Cancelar" severity="secondary" [outlined]="true" icon="pi pi-times" (onClick)="onCancel()" [disabled]="loading"></p-button>
+        <p-button label="Actualizar Medicamento" type="submit" icon="pi pi-save" [loading]="loading" [disabled]="loading || form.invalid || !form.dirty"></p-button>
+      </div>
+    </form>
+  </p-card>
+</div>
+<p-toast position="top-right"></p-toast>

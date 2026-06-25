@@ -1,29 +1,40 @@
-<main class="min-h-screen flex flex-col">
+<ng-container *ngIf="authService.isLoggedIn(); else authRoutes">
 
-  <!-- HEADER -->
-<header class="h-24 bg-[#e8f5e9] border-2 border-green-500 flex items-center w-full font-bold text-green-700 relative z-10">
-  <app-header class="w-full"></app-header>
-</header>
+  <main class="min-h-screen flex flex-col">
 
+    <!-- HEADER -->
+    <header class="h-24 bg-[#e8f5e9] border-2 border-green-500 flex items-center w-full font-bold text-green-700 relative z-10">
+      <app-header class="w-full"></app-header>
+    </header>
 
-  <!-- CONTENEDOR CENTRAL (ASIDE + CONTENT) -->
-  <div class="flex flex-1">
+    <!-- CONTENEDOR CENTRAL (ASIDE + CONTENT) -->
+    <div class="flex flex-1">
 
-    <!-- ASIDE -->
-    <aside class="w-64 bg-[#e8f5e9]  flex items-start justify-start font-bold text-green-600">
-      <app-aside></app-aside>
-    </aside>
+      <!-- ASIDE -->
+      <aside class="w-64 bg-[#e8f5e9] flex items-start justify-start font-bold text-green-600">
+        <app-aside></app-aside>
+      </aside>
 
-    <!-- CONTENT -->
-    <section class="flex-1 bg-[#f1f8f4]  flex items-center justify-center font-bold text-green-700">
-      <router-outlet />
-    </section>
+      <!-- CONTENT -->
+      <section class="flex-1 bg-[#f1f8f4] flex items-center justify-center font-bold text-green-700">
+        <router-outlet />
+      </section>
 
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="h-16 bg-[#e8f5e9] flex items-center justify-center font-bold text-green-700 mt-auto">
+      <app-footer></app-footer>
+    </footer>
+
+  </main>
+
+</ng-container>
+
+<!-- TEMPLATE PARA CUANDO NO HAY SESIÓN -->
+<ng-template #authRoutes>
+  <div class="min-h-screen flex items-center justify-center bg-gray-100">
+    
+    <router-outlet />
   </div>
-
-  <!-- FOOTER -->
-  <footer class="h-16 bg-[#e8f5e9] flex items-center justify-center font-bold text-green-700 mt-auto">
-    <app-footer></app-footer>
-  </footer>
-
-</main>
+</ng-template>

@@ -1,10 +1,10 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { Aside } from './components/layout/aside/aside';
-import { Header } from './components/layout/header/header';
-import { Footer } from './components/layout/footer/footer';
-import { AuthService } from './services/auth.service';
+import { Aside } from './shared/layout/aside/aside';
+import { Header } from './shared/layout/header/header';
+import { Footer } from './shared/layout/footer/footer';
+import { AuthService } from './core/services/auth.service';
 
 @Component({
   selector: 'app-root',

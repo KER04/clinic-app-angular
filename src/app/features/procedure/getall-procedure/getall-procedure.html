@@ -1,0 +1,60 @@
+<div class="card p-8">
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-2xl font-bold">Gestión de Procedimientos</h2>
+    <button pButton label="Nuevo Procedimiento" icon="pi pi-plus" class="p-button-success" routerLink="/Procedure/Create"></button>
+  </div>
+
+  <p-table [value]="procedures" [loading]="loading" stripedRows [tableStyle]="{'min-width': '80rem'}"
+    [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+    [rowsPerPageOptions]="[10, 25, 50]">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>ID</th>
+        <th>Cita ID</th>
+        <th>Código</th>
+        <th>Nombre</th>
+        <th>Costo</th>
+        <th>Fecha</th>
+        <th class="text-center">Estado</th>
+        <th class="text-center">Acciones</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-item>
+      <tr>
+        <td>{{ item.id }}</td>
+        <td>{{ item.appointment_id }}</td>
+        <td>{{ item.procedure_code }}</td>
+        <td class="font-semibold">{{ item.procedure_name }}</td>
+        <td>$ {{ item.cost }}</td>
+        <td>{{ item.performed_date | date:'dd/MM/yyyy' }}</td>
+        <td class="text-center">
+          <span class="px-3 py-1 rounded-full text-xs font-semibold"
+            [ngClass]="item.status === 'ACTIVE' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'">
+            {{ item.status === 'ACTIVE' ? 'Activo' : 'Inactivo' }}
+          </span>
+        </td>
+        <td class="text-center">
+          <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-warning p-button-text mr-2"
+            [routerLink]="['/Procedure/Update', item.id]" pTooltip="Editar" tooltipPosition="top"></button>
+          <button pButton [icon]="item.status === 'ACTIVE' ? 'pi pi-ban' : 'pi pi-check-circle'"
+            [class]="item.status === 'ACTIVE' ? 'p-button-rounded p-button-danger p-button-text' : 'p-button-rounded p-button-success p-button-text'"
+            [pTooltip]="item.status === 'ACTIVE' ? 'Desactivar' : 'Activar'" tooltipPosition="top"
+            (click)="toggleStatus(item)"></button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="8" class="text-center py-8">
+          <i class="pi pi-cog text-4xl text-gray-400 mb-3"></i>
+          <p class="text-gray-500 font-semibold text-lg">No hay procedimientos registrados</p>
+          <p class="text-gray-400 text-sm mt-2">Comience agregando un nuevo procedimiento</p>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<p-confirmdialog></p-confirmdialog>
+<p-toast position="top-right"></p-toast>
