@@ -48,7 +48,7 @@ export class Login {
             detail: 'Sesión iniciada correctamente'
           });
           setTimeout(() => {
-            this.router.navigate(['/clients']);
+            this.router.navigate(['/Patient']);
           }, 1000);
         },
         error: (error) => {

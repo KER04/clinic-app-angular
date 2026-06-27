@@ -58,7 +58,7 @@ import { Register } from './features/auth/register/register';
 export const routes: Routes = [
     {
         path: '',
-        redirectTo: '',
+        redirectTo: 'login',
         pathMatch: 'full'
     },
 

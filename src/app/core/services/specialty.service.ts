@@ -15,8 +15,8 @@ export class specialtyService {
   constructor(private http: HttpClient) {}
 
   getAllSpecialty(): Observable<SpecialtyI[]> {
-    return this.http.get<{ specialties: SpecialtyI[] }>(this.baseUrl).pipe(
-      map(response => response.specialties)
+    return this.http.get<any>(this.baseUrl).pipe(
+      map(resp => resp?.data ?? resp?.specialties ?? (Array.isArray(resp) ? resp : []))
     );
   }
 

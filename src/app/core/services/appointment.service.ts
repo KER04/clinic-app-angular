@@ -17,12 +17,7 @@ export class AppointmentService {
 
   getAllAppointments(): Observable<AppointmentI[]> {
     return this.http.get<any>(this.baseUrl).pipe(
-      map(resp => {
-        if (resp && Array.isArray(resp.appointment)) return resp.appointment;
-        if (resp && Array.isArray(resp.appointments)) return resp.appointments;
-        if (Array.isArray(resp)) return resp;
-        return [];
-      })
+      map(resp => resp?.data ?? resp?.appointment ?? resp?.appointments ?? (Array.isArray(resp) ? resp : []))
     );
   }
 

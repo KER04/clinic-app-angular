@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, map } from 'rxjs';
 import { PrescriptionI } from '../models/prescription.model';
 import { environment } from '../../../environments/environment';
 
@@ -13,7 +13,9 @@ export class PrescriptionService {
   constructor(private http: HttpClient) {}
 
   getAll(): Observable<PrescriptionI[]> {
-    return this.http.get<PrescriptionI[]>(this.baseUrl);
+    return this.http.get<any>(this.baseUrl).pipe(
+      map(resp => resp?.data ?? (Array.isArray(resp) ? resp : []))
+    );
   }
 
   getById(id: number): Observable<PrescriptionI> {

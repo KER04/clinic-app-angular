@@ -15,11 +15,8 @@ export class DoctorService {
   constructor(private http: HttpClient) {}
 
   getAllDoctors(): Observable<DoctorI[]> {
-    return this.http.get<DoctorI[] | { doctors: DoctorI[] }>(this.baseUrl).pipe(
-      map(response => {
-        if (Array.isArray(response)) return response;
-        return response.doctors || [];
-      })
+    return this.http.get<any>(this.baseUrl).pipe(
+      map(resp => resp?.data ?? resp?.doctors ?? (Array.isArray(resp) ? resp : []))
     );
   }
 

@@ -65,7 +65,7 @@ export class Register {
             detail: 'Usuario registrado correctamente'
           });
           setTimeout(() => {
-            this.router.navigate(['/clients']);
+            this.router.navigate(['/Patient']);
           }, 1000);
         },
         error: (error) => {

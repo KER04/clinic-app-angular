@@ -14,11 +14,7 @@ export class DiagnosisService {
 
   getAll(): Observable<DiagnosisI[]> {
     return this.http.get<any>(this.baseUrl).pipe(
-      map(resp => {
-        if (resp && Array.isArray(resp.diagnosis)) return resp.diagnosis;
-        if (Array.isArray(resp)) return resp;
-        return [];
-      })
+      map(resp => resp?.data ?? resp?.diagnosis ?? (Array.isArray(resp) ? resp : []))
     );
   }
 
